@@ -3,10 +3,7 @@ A Python port of Twitter's AnomalyDetection R Package. The original source and e
 
 ## Usage
 
-The package currently requires rpy2 in order to use R's stl function. A
-working R installation must be available. In the future, we'll move to an
-stl implementation that doesn't require R.
-One candidate for this is https://github.com/andreas-h/pyloess.
+This port uses a pure python stl implementation, and thus has no dependency on R installation.
 
 As in Twitter's package, there are two top level functions, one for timeseries data and one for simple vector processing, detect_ts and detect_vec respectively. The first one expects a two-column Pandas DataFrame consisting of timestamps and values. The second expects either a
 single-column DataFrame or a Series.
@@ -29,7 +26,9 @@ nosetests .
 ```
 
 ## Copyright and License
-Python port Copyright 2015 Nicolas Steven Miller
+Original Python port Copyright 2015 Nicolas Steven Miller
+Modified 2016 Jennifer Flynn
+
 Original R source Copyright 2015 Twitter, Inc and other contributors
 
 Licensed under the GPLv3

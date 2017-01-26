@@ -1,11 +1,11 @@
 """
-Usage details and source available here: https://github.com/nicolasmiller/pyculiarity.
+Usage details and source available here: https://github.com/jenfs/pyculiarity.
 
 The original R source and examples are available here: https://github.com/twitter/AnomalyDetection.
 
 Copyright and License
 
-Python port Copyright 2015 Nicolas Steven Miller
+Original Python port Copyright 2015 Nicolas Steven Miller
 
 Original R source Copyright 2015 Twitter, Inc and other contributors
 
@@ -16,12 +16,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyculiarity',
-    version='0.0.2',
+    version='0.0.3',
     description='A Python port of Twitter\'s AnomalyDetection R Package.',
     long_description=__doc__,
-    url='https://github.com/nicolasmiller/pyculiarity',
-    author='Nicolas Steven Miller',
-    author_email='nicolasmiller@gmail.com',
+    url='https://github.com/jenfs/pyculiarity',
+    author='Nicolas Steven Miller & Jennifer Flynn',
+    author_email='',
     license='GPL',
 
     classifiers=[
@@ -34,7 +34,7 @@ setup(
     keywords='data anomaly detection pandas timeseries',
     packages=['pyculiarity'],
     install_requires=['numpy', 'scipy', 'pandas', 'pytz',
-                      'statsmodels', 'rpy2'],
+                      'statsmodels', 'pyloess'],
     extras_require={
         'test': ['nose', 'mock']
     }

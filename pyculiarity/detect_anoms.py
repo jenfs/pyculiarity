@@ -1,13 +1,10 @@
-from date_utils import format_timestamp
 from itertools import groupby
-from math import trunc, sqrt
-from r_stl import stl
+from math import sqrt
+from pyloess import stl
 from scipy.stats import t as student_t
 from statsmodels.robust.scale import mad
 import numpy as np
 import pandas as ps
-import statsmodels.api as sm
-import sys
 
 def detect_anoms(data, k=0.49, alpha=0.05, num_obs_per_period=None,
                  use_decomp=True, one_tail=True,
@@ -66,13 +63,13 @@ def detect_anoms(data, k=0.49, alpha=0.05, num_obs_per_period=None,
             raise ValueError('Unsupported resample period: %d' % resample_period)
         data = data.resample(resample_period)
 
-
-    decomp = stl(data.value, "periodic", np=num_obs_per_period)
+    stl_recs = stl(data.value, np=num_obs_per_period, nl=None, isdeg=0)
+    decomp = ps.DataFrame.from_records(stl_recs)
 
     # Remove the seasonal component, and the median of the data to create the univariate remainder
     d = {
         'timestamp': data.index,
-        'value': data.value - decomp['seasonal'] - data.value.median()
+        'value': data.value - decomp['seasonal'].values - data.value.median()
     }
     data = ps.DataFrame(d)
 
@@ -107,7 +104,7 @@ def detect_anoms(data, k=0.49, alpha=0.05, num_obs_per_period=None,
 
         # protect against constant time series
         data_sigma = mad(data.value)
-        if data_sigma == 0:
+        if round(data_sigma, 3) == 0:
             break
 
         ares = ares / float(data_sigma)

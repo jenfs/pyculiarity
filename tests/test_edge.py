@@ -4,7 +4,6 @@ from pyculiarity.date_utils import date_format
 from unittest import TestCase
 import pandas as pd
 import os
-import numpy as np
 
 class TestEdge(TestCase):
     def setUp(self):
