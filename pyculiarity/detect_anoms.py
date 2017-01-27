@@ -63,8 +63,8 @@ def detect_anoms(data, k=0.49, alpha=0.05, num_obs_per_period=None,
             raise ValueError('Unsupported resample period: %d' % resample_period)
         data = data.resample(resample_period)
 
-    stl_recs = stl(data.value, np=num_obs_per_period, nl=None, isdeg=0)
-    decomp = ps.DataFrame.from_records(stl_recs)
+    stl_recs = stl(data.value, np=num_obs_per_period, ns=1000000, nl=None, isdeg=0)
+    decomp = ps.DataFrame.from_records(stl_recs, index=data.index)
 
     # Remove the seasonal component, and the median of the data to create the univariate remainder
     d = {

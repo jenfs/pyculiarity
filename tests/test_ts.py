@@ -23,7 +23,7 @@ class TestTS(TestCase):
                             direction='both', longterm=True,
                             plot=False, e_value=True)
         eq_(len(results['anoms'].columns), 3)
-        eq_(len(results['anoms'].iloc[:,1]), 142)
+        eq_(len(results['anoms'].iloc[:,1]), 131)
 
 
     def test_both_directions_e_value_threshold_med_max(self):
