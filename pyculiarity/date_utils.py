@@ -4,6 +4,7 @@ from heapq import nlargest
 from re import match
 import pytz
 import numpy as np
+import itertools
 
 def datetimes_from_ts(column):
     return column.map(
@@ -38,20 +39,35 @@ def format_timestamp(indf, index=0):
 
     return indf
 
+
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return itertools.izip(a, b)
+
+
 def get_gran(tsdf, index=0):
-    col = tsdf.iloc[:,index]
+    col = tsdf.iloc[:, index]
     n = len(col)
 
-    largest, second_largest = nlargest(2, col)
-    gran = int(round(np.timedelta64(largest - second_largest) / np.timedelta64(1, 's')))
+    granularities = []
+    largest_10 = nlargest(10, col)
+    for current, previous in pairwise(largest_10):
+        seconds_between = int(round(np.timedelta64(current - previous) / np.timedelta64(1, 's')))
+        granularities.append(seconds_between)
 
-    if gran >= 86400:
+    gran = np.mean(granularities)
+
+    if gran >= 0.97 * 86400:
         return "day"
-    elif gran >= 3600:
+    elif gran >= 0.97 * 3600:
         return "hr"
-    elif gran >= 60:
+    elif gran >= 0.97 * 60:
         return "min"
-    elif gran >= 1:
+    elif gran >= 0.97 * 1:
         return "sec"
     else:
         return "ms"
+
+
