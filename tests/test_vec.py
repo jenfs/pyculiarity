@@ -1,5 +1,5 @@
 from nose.tools import eq_
-from pyculiarity import detect_ts, detect_vec
+from pyculiarity import detect_vec
 from unittest import TestCase
 import pandas as pd
 import os
@@ -25,9 +25,23 @@ class TestVec(TestCase):
         eq_(len(results['anoms'].columns), 3)
         eq_(len(results['anoms'].iloc[:,1]), 131)
 
+
+    def test_both_direction_e_value_longterm_anomaly_in_last_longterm(self):
+        data = [5, 20, 25, 30, 35, 25, 5] * 88
+        data = data[:-4]
+        data[587] = 100000
+        results = detect_vec(data, max_anoms=0.1, direction='both', period=7, longterm_period=7 * 4, e_value=True)
+        eq_(len(results['anoms'].columns), 3)
+        eq_(len(results['anoms'].iloc[:,1]), 2)
+        eq_(int(results['anoms'].iloc[0]['expected_value']), 5)
+        eq_(int(results['anoms'].iloc[1]['expected_value']), 50229)
+
+
     def test_both_directions_e_value_threshold_med_max(self):
         results = detect_vec(self.raw_data.iloc[:,1], max_anoms=0.02,
                                      direction='both', period=1440,
                                      threshold="med_max", e_value=True)
         eq_(len(results['anoms'].columns), 3)
         eq_(len(results['anoms'].iloc[:,1]), 6)
+
+

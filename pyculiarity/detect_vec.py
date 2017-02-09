@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import namedtuple
 from detect_anoms import detect_anoms
-from math import ceil
 from pandas import DataFrame, Series
 from pandas.lib import Timestamp
 import numpy as np
@@ -77,7 +76,7 @@ def detect_vec(df, max_anoms=0.10, direction='pos',
             'value': df.iloc[:,0]
         }
         df = DataFrame(d, index=d['timestamp'])
-    elif isinstance(df, Series):
+    elif isinstance(df, Series) or isinstance(df, list):
         d = {
             'timestamp': range(len(df)),
             'value': df
@@ -152,9 +151,9 @@ def detect_vec(df, max_anoms=0.10, direction='pos',
     if longterm_period:
         all_data = []
         for j in range(0, len(df.timestamp), longterm_period):
-            start_index = df.timestamp.iget(j)
-            end_index = min((start_index + longterm_period), num_obs)
-            if (end_index - start_index) == longterm_period:
+            start_index = df.timestamp.iat[j]
+            end_index = min((start_index + longterm_period - 1), num_obs)
+            if (end_index - start_index + 1) == longterm_period:
                 sub_df = df[(df.timestamp >= start_index)
                             & (df.timestamp <= end_index)]
             else:
@@ -226,11 +225,11 @@ def detect_vec(df, max_anoms=0.10, direction='pos',
 
     # Cleanup potential duplicates
     try:
-        all_anoms.drop_duplicates(subset=['timestamp'])
-        seasonal_plus_trend.drop_duplicates(subset=['timestamp'])
+        all_anoms = all_anoms.drop_duplicates(subset=['timestamp'])
+        seasonal_plus_trend = seasonal_plus_trend.drop_duplicates(subset=['timestamp'])
     except TypeError:
-        all_anoms.drop_duplicates(cols=['timestamp'])
-        seasonal_plus_trend.drop_duplicates(cols=['timestamp'])
+        all_anoms = all_anoms.drop_duplicates(cols=['timestamp'])
+        seasonal_plus_trend = seasonal_plus_trend.drop_duplicates(cols=['timestamp'])
 
 
     # -- If only_last was set by the user, create subset of
@@ -252,11 +251,11 @@ def detect_vec(df, max_anoms=0.10, direction='pos',
         }
         x_subset_previous = DataFrame(d, index=d['timestamp'])
         all_anoms = all_anoms[all_anoms.timestamp
-                              >= x_subset_single_period.timestamp.iget(0)]
+                              >= x_subset_single_period.timestamp.iat[0]]
         num_obs = len(x_subset_single_period.value)
 
     # Calculate number of anomalies as a percentage
-    anom_pct = (len(df.value) / float(num_obs)) * 100
+    anom_pct = (len(all_anoms) / float(num_obs)) * 100
 
     if anom_pct == 0:
         return {
@@ -284,6 +283,8 @@ def detect_vec(df, max_anoms=0.10, direction='pos',
             'timestamp': all_anoms.timestamp,
             'anoms': all_anoms.value
         }
+    if 'expected_value' in d.keys():
+        print d['expected_value']
     anoms = DataFrame(d, index=d['timestamp'].index)
 
     return {
