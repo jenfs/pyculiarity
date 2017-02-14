@@ -258,11 +258,11 @@ def detect_ts(df, max_anoms=0.10, direction='pos',
 
     # Cleanup potential duplicates
     try:
-        all_anoms.drop_duplicates(subset=['timestamp'])
-        seasonal_plus_trend.drop_duplicates(subset=['timestamp'])
+        all_anoms = all_anoms.drop_duplicates(subset=['timestamp'])
+        seasonal_plus_trend = seasonal_plus_trend.drop_duplicates(subset=['timestamp'])
     except TypeError:
-        all_anoms.drop_duplicates(cols=['timestamp'])
-        seasonal_plus_trend.drop_duplicates(cols=['timestamp'])
+        all_anoms = all_anoms.drop_duplicates(cols=['timestamp'])
+        seasonal_plus_trend = seasonal_plus_trend.drop_duplicates(cols=['timestamp'])
 
     # -- If only_last was set by the user,
     # create subset of the data that represent the most recent day
@@ -296,7 +296,7 @@ def detect_ts(df, max_anoms=0.10, direction='pos',
         num_obs = len(x_subset_single_day.value)
 
     # Calculate number of anomalies as a percentage
-    anom_pct = (len(df.value) / float(num_obs)) * 100
+    anom_pct = (len(all_anoms) / float(num_obs)) * 100
 
     if anom_pct == 0:
         return {

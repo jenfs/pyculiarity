@@ -12,8 +12,7 @@ class TestEdge(TestCase):
     def test_check_constant_series(self):
         s = pd.Series([1] * 1000)
         results = detect_vec(s, period=14, direction='both', plot=False)
-        eq_(len(results['anoms'].columns), 2)
-        eq_(len(results['anoms'].iloc[:,1]), 0)
+        eq_(results['anoms'], None)
 
     def test_check_midnight_date_format(self):
         data = pd.read_csv(os.path.join(self.path,
