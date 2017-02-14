@@ -283,8 +283,6 @@ def detect_vec(df, max_anoms=0.10, direction='pos',
             'timestamp': all_anoms.timestamp,
             'anoms': all_anoms.value
         }
-    if 'expected_value' in d.keys():
-        print d['expected_value']
     anoms = DataFrame(d, index=d['timestamp'].index)
 
     return {

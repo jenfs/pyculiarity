@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyculiarity',
-    version='0.0.3',
+    version='0.1.0',
     description='A Python port of Twitter\'s AnomalyDetection R Package.',
     long_description=__doc__,
     url='https://github.com/jenfs/pyculiarity',
