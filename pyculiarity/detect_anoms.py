@@ -104,7 +104,7 @@ def detect_anoms(data, k=0.49, alpha=0.05, num_obs_per_period=None,
 
         # protect against constant time series
         data_sigma = mad(data.value)
-        if round(data_sigma, 3) == 0:
+        if data_sigma == 0:
             break
 
         ares = ares / float(data_sigma)
