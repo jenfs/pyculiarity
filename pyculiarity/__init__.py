@@ -7,7 +7,7 @@
     :license: GPL, see LICENSE for more details.
 """
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 from detect_vec import detect_vec
 from detect_ts import detect_ts
